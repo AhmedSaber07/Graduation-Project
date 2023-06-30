@@ -1,0 +1,116 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Test.Data;
+@using Test.Models;
+@inject UserManager<ApplicationUser> UserManager
+@inject ApplicationDbContext _context
+@{
+    Radiologist radiologist = null;
+    Doctor doctor = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Test</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img class="eyeLogo" style="height: 50px; width: 130px; object-fit: cover;" src="~/images/photo_2023-05-29_22-16-55.jpg" />
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-gear"></i> Management
+                                </a>
+
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-controller="Manage" asp-action="ManageDoctors"><i class="bi bi-person-square"></i> Doctors</a>
+                                    <a class="dropdown-item" asp-controller="Manage" asp-action="ManageRadiologists"><i class="bi bi-headset"></i> Radiologists</a>
+                                </div>
+                            </li>
+                        }
+                        else if (User.IsInRole("Doctor"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-clipboard"></i> Requests
+                                </a>
+
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-controller="Request" asp-action="AllRequests"> Show Requests</a>
+                                    <a class="dropdown-item" asp-controller="Request" asp-action="SendRequest"> Add Request</a>
+                                </div>
+                            </li>
+
+                            var email = UserManager.GetUserAsync(User).Result.Email;
+                            doctor = _context.Doctors.Where(e => e.Email == email).FirstOrDefault();
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownr" role="button" data-toggle="dropdown"
+                                   aria-haspopup="true" aria-expanded="false" onmouseover="getReports(@doctor.Id)">
+                                    <div class="circle" id="repcir"></div>
+                                    <i class="bi bi-bell" id="repnotify"></i>
+                                    Notifications
+                                </a>
+
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownr" id="reportList">
+
+                                </div>
+                            </li>
+
+                        }
+                        else if (User.IsInRole("Radiologist"))
+                        {
+                            var email = UserManager.GetUserAsync(User).Result.Email;
+                            radiologist = _context.Radiologists.Where(e => e.Email == email).FirstOrDefault();
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                   aria-haspopup="true" aria-expanded="false" onmouseover="getRequests(@radiologist.Id)">
+                                    <div class="circle" id="cir"></div>
+                                    <i class="bi bi-bell" id="notify"></i>
+                                    Notifications
+                                </a>
+
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown" id="notifyList">
+
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/bootbox.js/bootbox.min.js"></script>
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/reportbotify.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

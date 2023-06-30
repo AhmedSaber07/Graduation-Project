@@ -1,0 +1,62 @@
+﻿@model EditUserViewModel
+
+@{
+    ViewData["Title"] = "Edit Doctor Profile";
+}
+
+<form asp-action="EditDoctor" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Edit Radiologist Profile</h4>
+            <hr />
+            <input type="hidden" asp-for="Email" />
+            <div class="form-group">
+                <label asp-for="FirstName"></label>
+                <input asp-for="FirstName" class="form-control" maxlength="100" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" class="form-control" maxlength="100" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" disabled />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserType"></label>
+                <input asp-for="UserType" class="form-control" disabled />
+                <span asp-validation-for="UserType" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="ProfilePicture" class="w-100"></label>
+                @if (Model.ProfilePicture != null)
+                {
+
+                    <img id="profilePicture" alt="profile" class="profile-picture" src="data:image/*;base64,@(Convert.ToBase64String(Model.ProfilePicture))" />
+                }
+                else
+                {
+                    <img id="profilePicture" alt="profile" class="profile-picture" src="~/images/avatar-male.jpg" />
+                }
+                <div class="custom-file mt-2">
+                    <input type="file"
+                           accept="image/*"
+                           asp-for="ProfilePicture"
+                           class="custom-file-input"
+                           onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])" />
+                    <label class="custom-file-label" asp-for="ProfilePicture">choose picture...</label>
+                    <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary d-block mt-4">Save</button>
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

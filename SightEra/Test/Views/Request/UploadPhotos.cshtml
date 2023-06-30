@@ -1,0 +1,100 @@
+﻿@{
+    var showVideo = TempData["ShowVideo"] as bool? ?? false;
+}
+@model DisplayPhotos
+<form asp-action="UploadPhotos" enctype="multipart/form-data" method="post">
+    <div id="uploadImgDiv">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="w-100"></label>
+
+                    <img id="eyePicture" alt="profile" class="eye-picture" src="~/images/white-background.jpg" style="width:255px;height:255px;" />
+                    <div class="custom-file mt-2">
+                        <input type="file"
+                               accept=".jpg, .jpeg , .png"
+                               maxlength="4194304"
+                               class="custom-file-input"
+                               asp-for="@Model.right"
+                               onchange="document.getElementById('eyePicture').src = window.URL.createObjectURL(this.files[0])" />
+                        <label class="custom-file-label">choose picture...</label>
+                        <span asp-validation-for="@Model.right" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="w-100"></label>
+                    <img id="eyePicture2" alt="profile" class="eye-picture" style="width:255px;height:255px;" src="~/images/white-background.jpg" />
+                    <div class="custom-file mt-2">
+                        <input type="file"
+                               accept=".jpg, .jpeg , .png"
+                               maxlength="4194304"
+                               class="custom-file-input"
+                               asp-for="@Model.right"
+                               onchange="document.getElementById('eyePicture2').src = window.URL.createObjectURL(this.files[0])" />
+                        <label class="custom-file-label">choose picture...</label>
+                        <span asp-validation-for="@Model.Left" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-outline-primary d-block mt-4" id="btnVideo">Generate Report</button>
+    </div>
+    <div id="divVideo">
+        <video id="myVideo" src="~/vid/predictEye.mp4" autoplay loop controls muted style="width: 100%; height: 810px;"></video>
+    </div>
+</form>
+<style>
+    /* Hide the default video controls */
+    video::-webkit-media-controls {
+        display: none !important;
+    }
+
+    video::-webkit-media-controls-enclosure {
+        display: none !important;
+    }
+
+    video::-webkit-media-controls-overlay-play-button {
+        display: none !important;
+    }
+
+    video::-webkit-media-controls-start-playback-button {
+        display: none !important;
+    }
+
+    video::-webkit-media-controls-panel {
+        display: none !important;
+    }
+
+    body {
+        overflow: hidden;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Hide the video container initially
+        $('#divVideo').hide();
+
+        // Add a click event handler to the "Show Video" button
+        $('#btnVideo').click(function () {
+            // Show the video container
+            $('#uploadImgDiv').hide();
+            $('#divVideo').show();
+
+            // Play the video
+            var videoElement = document.getElementById('myVideo');
+            videoElement.play();
+
+            window.onload = function() {
+        var showVideo = @showVideo.ToString().ToLower();
+        if (!showVideo) {
+            var videoElement = document.getElementById('myVideo');
+            videoElement.style.display = 'none';
+        }
+    };
+        });
+    });
+</script>

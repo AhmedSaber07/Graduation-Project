@@ -1,0 +1,43 @@
+﻿@model RequestUser
+@using Test.Data;
+@{
+    ViewData["Title"] = "Show Request";
+}
+
+<form asp-action="GetRequest" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-6">
+            <h4>show request</h4>
+            <hr />
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="@Model.FullName"></label>
+                <input asp-for="@Model.FullName" class="form-control" maxlength="100" disabled />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Gender"></label>
+                <input asp-for="@Model.Gender" class="form-control" maxlength="100" disabled />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.PhoneNumber"></label>
+                <input asp-for="@Model.PhoneNumber" class="form-control" maxlength="100" disabled />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Age"></label>
+                <input asp-for="@Model.Age" class="form-control" maxlength="100" disabled />
+            </div>
+        </div>
+    </div>
+
+    @if (Model.IsShow)
+    {
+        <button type="submit" class="btn btn-primary d-block mt-4" disabled>Request Confirmed</button>
+    }
+    else
+    {
+        <button type="submit" class="btn btn-outline-primary d-block mt-4" asp-route-RequestId="@Model.Id">Upload Photos </button>
+    }
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

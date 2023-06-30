@@ -1,0 +1,64 @@
+﻿@model AddUserViewModel
+
+@{
+    ViewData["Title"] = "Add New Doctor";
+}
+
+<form asp-action="AddDoctor" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Create a new account.</h4>
+            <hr />
+            <div class="form-group">
+                <label asp-for="FirstName"></label>
+                <input asp-for="FirstName" class="form-control" maxlength="100" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" class="form-control" maxlength="100" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <select class="form-select custom-select" asp-for="UserType">
+                    <option value="Doctor" selected>Doctor</option>
+                </select>
+                <span asp-validation-for="UserType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword"></label>
+                <input asp-for="ConfirmPassword" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="ProfilePicture" class="w-100"></label>
+                <img id="profilePicture" alt="profile" class="profile-picture" src="~/images/avatar-male.jpg" />
+                <div class="custom-file mt-2">
+                    <input type="file"
+                           accept="image/*"
+                           asp-for="ProfilePicture"
+                           class="custom-file-input"
+                           onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])" />
+                    <label class="custom-file-label" asp-for="ProfilePicture">choose picture...</label>
+                    <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary d-block mt-4">Save</button>
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

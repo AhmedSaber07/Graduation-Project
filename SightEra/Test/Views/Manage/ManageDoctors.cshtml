@@ -1,0 +1,120 @@
+﻿@model IEnumerable<Doctor>
+@using Test.ViewModel;
+@{
+    ViewData["Title"] = "Doctors";
+}
+<h2>Doctors</h2>
+
+
+<div id="alert" class="alert alert-success alert-dismissible fade show mt-4 d-none" role="alert">
+    Doctor deleted.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<form  method="post" asp-controller="Manage" asp-action="SearchDoctor">
+    <div class="input-group mb-3">
+        <input name="searchString" type="text" class="form-control" placeholder="Search for a doctor..." />
+        <div class="input-group-append">
+            <button class="btn btn-outline-dark my-2 my-sm-0" type="submit"><i class="bi bi-search"></i></button>
+        </div>
+    </div>
+</form>
+
+
+<div class="row">
+    <div class="col-md-auto offset-md-2">
+        <table class="table">
+            <thead>
+                <tr class="text-center">
+                    <th>@Html.DisplayNameFor(model => model.ProfilePicture)</th>
+                    <th>Full Name</th>
+                    <th>Requests Sending </th>
+                    <th>Report Confirmed</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        @if (item.ProfilePicture != null)
+                        {
+                            <td class="align-middle">
+                                <img class="rounded-circle pic-profile" src="data:image/*;base64,@(Convert.ToBase64String(@item.ProfilePicture))" alt="@item.FirstName" style="max-width: 120px; object-fit: cover">
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="align-middle">
+                                <img class="rounded-circle pic-profile" src="~/images/avatar-male.jpg" alt="@item.FirstName" style="max-width: 120px;">
+                            </td>
+                        }
+                        <td class="align-middle">
+                            @item.FirstName @item.LastName
+                        </td>
+                        <td class="align-middle">
+                            @{
+                                @item.Requests?.Count
+                            }
+                        </td>
+                        <td class="align-middle">
+                            @{
+                                @item.Reports?.Count
+                            }
+                        </td>
+                        <td class="align-middle">
+                            <a class="btn btn-outline-success" asp-route-Email=@item.Email asp-action="EditDoctor"><i class="bi bi-pencil-square"></i>Edit </a> |
+                            <a href="javascript:;" class="btn btn-danger text-white js-delete" data-id="@item.UserName"><i class="bi bi-trash"></i>Delete </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div style="position:fixed; right:25px; bottom:75px;" class="text-white">
+    <a asp-action="AddDoctor" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Add New
+    </a>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.js-delete').on('click', function () {
+                var btn = $(this);
+                bootbox.confirm({
+                    message: 'Are you sure that you need to delete this doctor?',
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-danger'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-secondary'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            $.ajax({
+                                url: '/api/Users/?UserName=' + btn.data('id'),
+                                method: 'DELETE',
+                                success: function () {
+                                    btn.parents('tr').fadeOut();
+                                    $('#alert').removeClass('d-none');
+                                    //alert('User deleted');
+                                    setTimeout(function () { $('#alert').addClass('d-none'); }, 3000)
+                                },
+                                error: function () {
+                                    alert('Something went wrong');
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

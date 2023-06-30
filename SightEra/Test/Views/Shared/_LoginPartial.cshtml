@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
+        {
+            <li class="nav-item" style="padding-top: 4px;">
+                <img class="rounded-circle avater" alt="profile" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))" />
+            </li>
+
+        }
+        else
+        {
+<li class="nav-item" style="padding-top: 4px;">
+    <img class="rounded-circle avater" alt="profile" src="~/images/avatar-male.jpg" />
+</li>
+        }
+        <li class="nav-item" style="padding-top: 5px;">
+            <a class="nav-link text-dark" style="padding-left:10px;" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName </a>
+        </li>
+        <li class="nav-item" style="padding:5px;">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="btn btn-outline-danger my-2 my-sm-0" style="padding: 8px;padding-left: 10px;"><i class="bi bi-box-arrow-in-right"></i> Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+
+        <li class="nav-item" style="padding:5px;">
+            <a class="btn btn-outline-success my-2 my-sm-0" asp-area="Identity" asp-page="/Account/Login"><i class="bi bi-box-arrow-in-left"></i> Login</a>
+        </li>
+        <li class="nav-item" style="padding-top: 5px;">
+            <a class="btn btn-outline-primary my-2 my-sm-0" asp-area="Identity" asp-page="/Account/Register"><i class="bi bi-person-plus"></i> Register</a>
+        </li>
+    }
+</ul>

@@ -1,0 +1,37 @@
+﻿@model ReportUser
+@using Test.Data;
+@{
+    ViewData["Title"] = "Generate Report";
+}
+
+<form asp-action="GenerateReport" enctype="multipart/form-data" method="post">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="hidden" asp-for="Id" />
+                <label asp-for="Request.FullName"></label>
+                <input asp-for="Request.FullName" class="form-control" maxlength="100" disabled />
+            </div>
+            <div class="form-group">
+                <label>Doctor Name</label>
+                <input value="@Model.Doctor.FirstName @Model.Doctor.LastName" class="form-control" maxlength="100" disabled />
+            </div>
+            <div class="form-group">
+                <label>Radiologist Name</label>
+                <input value="@Model.Radiologist.FirstName @Model.Radiologist.LastName" class="form-control" maxlength="100" disabled />
+            </div>
+            <div class="form-group">
+                <label asp-for="rightEyeDiseaseName"></label>
+                <input asp-for="rightEyeDiseaseName" class="form-control" maxlength="100" disabled />
+            </div>
+            <div class="form-group">
+                <label asp-for="leftEyeDiseaseName"></label>
+                <input asp-for="leftEyeDiseaseName" class="form-control" maxlength="100" disabled />
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-outline-primary d-block mt-4" asp-route-reportId="@Model.Id">Generate Report</button>
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
